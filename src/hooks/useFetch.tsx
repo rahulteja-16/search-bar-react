@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 
-interface ReqOptions {
-    method: string,
-}
 
-const useFetch = (url:string, options: ReqOptions) => {
+const useFetch = (url:string) => {
     const [status, setStatus] = useState('idle');
     const [data, setData] = useState([]);
 
@@ -13,14 +10,14 @@ const useFetch = (url:string, options: ReqOptions) => {
 
         const fetchData = async () => {
             setStatus('loading');
-            const response = await fetch(url, options);
+            const response = await fetch(url);
             const data = await response.json();
-            setData(data);
+            setData(data.predictions);
             setStatus('fetched');
         }
 
         fetchData();
-    }, [url, options]);
+    }, [url]);
 
     return { status, data };
 }
