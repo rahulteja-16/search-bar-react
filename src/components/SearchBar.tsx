@@ -4,14 +4,9 @@ import { debounce } from 'lodash'
 import { apiStatus } from '../constants'
 import SearchItem from './SearchItem';
 import { Loader } from '../styles/Loader';
+import { Search } from '../types';
 
-interface Search {
-    data: Array<object>,
-    request: Function,
-    status: string,
-    placeholder: string,
-    error: string
-}
+
 
 const InputWrapper = styled.div`
     display: flex;
@@ -51,11 +46,6 @@ const SearchBar = ({ data, request, status, placeholder, error }: Search) => {
         debouncedSave(newValue);
     }
 
-    const updateInput = (val: string) => {
-        setInputValue(val);
-        debouncedSave(val);
-    }
-
     return (
         <>
         <InputWrapper>
@@ -68,7 +58,7 @@ const SearchBar = ({ data, request, status, placeholder, error }: Search) => {
             {status === apiStatus.FETCHED && data.length !== 0  && <ListWrapper>
                 {data.map((item: any) => {
                     return (
-                        <SearchItem result={item.description} key={item.place_id} onSelect={updateInput}/>
+                        <SearchItem result={item.description} key={item.place_id} onSelect={updateSave}/>
                     )
                 })}
             </ListWrapper>}   

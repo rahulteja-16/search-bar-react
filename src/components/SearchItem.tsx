@@ -1,10 +1,5 @@
-import React from 'react'
 import styled from 'styled-components';
-
-interface item {
-    result: string
-    onSelect: Function
-}
+import { Item } from '../types';
 
 const LI = styled.li`
     list-style-type: none;
@@ -12,7 +7,7 @@ const LI = styled.li`
     cursor:pointer;
 `;
 
-const SearchItem = ({ result,  onSelect } : item) => {
+const SearchItem = ({ result,  onSelect } : Item) => {
     return <LI onClick={() => onSelect(result)}>{ result}</LI>
 }
 export default SearchItem;
