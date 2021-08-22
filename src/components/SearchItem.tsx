@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 interface item {
     result: string
-    onSelect: Function
 }
 
 const LI = styled.li`
@@ -11,7 +10,7 @@ const LI = styled.li`
     padding: 1%;
 `;
 
-const SearchItem = ({ result, onSelect } : item) => {
-    return <LI onClick={ () => onSelect(result)}>{ result}</LI>
+const SearchItem = ({ result,  } : item) => {
+    return <LI >{ result}</LI>
 }
 export default SearchItem;

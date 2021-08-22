@@ -1,9 +1,9 @@
-import React from 'react'
+import { useState, useCallback} from 'react'
 import styled from 'styled-components';
+import {debounce} from 'lodash'
 
 interface Search {
-    value: string,
-    onSearch: Function
+    requests: any
 }
 
 const InputWrapper = styled.div`
@@ -21,11 +21,19 @@ const Input = styled.input`
     padding-left: 10px;
 `;
 
-const SearchBar = ({ value, onSearch}: Search) => {
-    
+const SearchBar = ({ requests }: Search) => {
+    const [inputValue, setInputValue] = useState('');
+
+    const debouncedSave = useCallback(debounce((newValue) => requests(newValue), 1000),[]);
+
+    const updateSave = (newValue: string) => {
+        setInputValue(newValue);
+        debouncedSave(newValue);
+    }
+
     return (
         <InputWrapper>
-            <Input type="text" value={value} onChange={ (e) => onSearch(e.target.value) }/>
+            <Input type="text" value={ inputValue } onChange={ (e) => updateSave(e.target.value) }/>
         </InputWrapper>
     );
     

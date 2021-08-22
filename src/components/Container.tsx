@@ -1,6 +1,5 @@
 import React, { useState} from 'react'
 import styled from 'styled-components';
-import useFetch from '../hooks/useFetch';
 import SearchBar from './SearchBar';
 import constants, { apiStatus } from '../constants'
 import SearchItem from './SearchItem';
@@ -29,26 +28,38 @@ const ListWrapper = styled.div`
 
 
 const Container = () => {
-    const [searchKey, setSearchKey] = useState('');
-    const url = searchKey && `${constants.BASE_URL}?input=${searchKey}${constants.API_KEY}`;
-    const { status, data, error } = useFetch(url);
+    const [status, setStatus] = useState(apiStatus.IDLE)
+    const [data, setData] = useState([]);
+    const [error, setError] = useState(null)
     
-
-    const onSearchValue = (val: string) => {
-        setSearchKey(val);
+    const onSearchValue = async (val: string) => {
+        const url = val && `${constants.BASE_URL}?input=${val}${constants.API_KEY}`;
+        try {
+            setStatus(apiStatus.LOADING);
+            const response = await fetch(url);
+            const data = await response.json();
+            setData(data.predictions);
+            setStatus(apiStatus.FETCHED);
+        } catch(err){
+            setStatus(apiStatus.ERROR);
+            setData([]);
+            const errMessage:any = 'Error Fetching data.'
+            setError(errMessage);
+        }
     }
+
 
     return(
         <Wrapper>
-            <SearchBar value={searchKey} onSearch={onSearchValue} />
+            <SearchBar requests={ onSearchValue}/>
             {status === apiStatus.IDLE && <MessageWrapper>Search for a place.</MessageWrapper>}
             {status === apiStatus.LOADING && <MessageWrapper><Loader /></MessageWrapper>}
             {status === apiStatus.ERROR && <MessageWrapper>{error}</MessageWrapper>}
             {status === apiStatus.FETCHED && data.length === 0 && <MessageWrapper>No Results found.</MessageWrapper>}
-            {status === apiStatus.FETCHED && data.length !== 0 && <ListWrapper>
+            {status === apiStatus.FETCHED && data.length !== 0  && <ListWrapper>
                 {data.map((item: any) => {
                     return (
-                        <SearchItem result={item.description} key={item.place_id} onSelect={onSearchValue}/>
+                        <SearchItem result={item.description} key={item.place_id} />
                     )
                 })}
             </ListWrapper>}
