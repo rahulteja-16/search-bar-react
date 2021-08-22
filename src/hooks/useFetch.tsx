@@ -5,7 +5,7 @@ import { apiStatus } from '../constants';
 const useFetch = (url:string) => {
     const [status, setStatus] = useState(apiStatus.IDLE);
     const [data, setData] = useState([]);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (!url) return;
@@ -26,7 +26,7 @@ const useFetch = (url:string) => {
         fetchData();
     }, [url]);
 
-    return { status, data, error };
+    return {  data, status, error };
 }
 
 export default useFetch;

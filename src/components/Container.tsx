@@ -2,6 +2,7 @@ import  { useState} from 'react'
 import styled from 'styled-components';
 import SearchBar from './SearchBar';
 import constants, { apiStatus } from '../constants'
+import useFetch from '../hooks/useFetch';
 
 
 const Wrapper = styled.div`
@@ -12,24 +13,13 @@ const Wrapper = styled.div`
 `;
 
 const Container = () => {
-    const [status, setStatus] = useState(apiStatus.IDLE)
-    const [data, setData] = useState([]);
-    const [error, setError] = useState('')
+    const [currentValue, setCurrentValue] = useState('');
+
+    const url = currentValue && `${constants.BASE_URL}?input=${currentValue}${constants.API_KEY}`;
+    const { data, status, error } = useFetch(url);
     
     const onSearchValue = async (val: string) => {
-        const url = val && `${constants.BASE_URL}?input=${val}${constants.API_KEY}`;
-        try {
-            setStatus(apiStatus.LOADING);
-            const response = await fetch(url);
-            const data = await response.json();
-            setData(data.predictions);
-            setStatus(apiStatus.FETCHED);
-        } catch(err){
-            setStatus(apiStatus.ERROR);
-            setData([]);
-            const errMessage:any = 'Error Fetching data.'
-            setError(errMessage);
-        }
+        setCurrentValue(val);
     }
 
 
