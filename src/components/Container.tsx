@@ -1,8 +1,9 @@
 import  { useState} from 'react'
 import styled from 'styled-components';
 import SearchBar from './SearchBar';
-import constants, { apiStatus } from '../constants'
+import constants from '../constants'
 import useFetch from '../hooks/useFetch';
+import { useMemo } from 'react';
 
 
 const Wrapper = styled.div`
@@ -16,7 +17,8 @@ const Container = () => {
     const [currentValue, setCurrentValue] = useState('');
 
     const url = currentValue && `${constants.BASE_URL}?input=${currentValue}${constants.API_KEY}`;
-    const { data, status, error } = useFetch(url);
+    const headers = useMemo(() => ({method: 'GET'}), [])
+    const { data, status, error } = useFetch(url, headers);
     
     const onSearchValue = async (val: string) => {
         setCurrentValue(val);

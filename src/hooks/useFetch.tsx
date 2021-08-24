@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react'
 import { apiStatus } from '../constants';
 
 
-const useFetch = (url:string) => {
+const useFetch = (url: string, headers: any) => {
     const [status, setStatus] = useState(apiStatus.IDLE);
     const [data, setData] = useState([]);
     const [error, setError] = useState('');
-
     useEffect(() => {
         if (!url) return;
         const fetchData = async () => {
             try {
                 setStatus(apiStatus.LOADING);
-                const response = await fetch(url);
+                const response = await fetch(url, headers);
                 const data = await response.json();
                 setData(data.predictions);
                 setStatus(apiStatus.FETCHED);
@@ -24,7 +23,7 @@ const useFetch = (url:string) => {
             }
         }
         fetchData();
-    }, [url]);
+    }, [url, headers]);
 
     return {  data, status, error };
 }
