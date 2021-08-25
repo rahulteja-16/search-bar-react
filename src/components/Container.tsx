@@ -18,7 +18,7 @@ const Container = () => {
 
     const url = currentValue && `${constants.BASE_URL}?input=${currentValue}${constants.API_KEY}`;
     const headers = useMemo(() => ({method: 'GET'}), [])
-    const { data, status, error } = useFetch(url, headers);
+    const { data, status, error } = useFetch(url, headers, 'predictions');
     
     const onSearchValue = async (val: string) => {
         setCurrentValue(val);
